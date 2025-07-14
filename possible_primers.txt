@@ -1,0 +1,371 @@
+Accepted versions: 10
+#############  Option number 1
+
+🔬 Primer Pair Report (HDR starts: (28, 5))
+
+🧪 HDR-only
+  FWD (len=18): Tm=60.2°C | ΔG_hairpin=-0.37 | ΔG_homodimer=-6.06
+  REV (len=18): Tm=58.1°C | ΔG_hairpin=0.00 | ΔG_homodimer=-8.91
+  Heterodimer ΔG = -3.38 kcal/mol
+
+🧪 HDR
+  FWD (len=37): Tm=77.1°C | ΔG_hairpin=-2.05 | ΔG_homodimer=-8.03
+  REV (len=39): Tm=74.7°C | ΔG_hairpin=-0.83 | ΔG_homodimer=-3.27
+  Heterodimer ΔG = -4.61 kcal/mol
+
+🧪 AF
+  FWD (len=39): Tm=74.7°C | ΔG_hairpin=-0.57 | ΔG_homodimer=-8.91
+  REV (len=37): Tm=77.1°C | ΔG_hairpin=-1.27 | ΔG_homodimer=-8.81
+  Heterodimer ΔG = -2.39 kcal/mol
+
+
+🧬 Primer list
+┌────────────┬─────────────────────────────────────────┬───────┬──────┐
+│ Name       │ Sequence                                │  Len  │  Tm  │
+├────────────┼─────────────────────────────────────────┼───────┼──────┤
+│ oh_leftHDR │ TGCACCAGGCCACTTGTC                        │   18 │  60.2 │
+│ oh_rightHDR │ GCGGGTTAAGCTGCATGA                        │   18 │  58.1 │
+│ oh_leftAF  │ AACGATGATGCTCACTCTCGG                     │   21 │  60.2 │
+│ oh_rightAF │ GGTTCAGGTGGAGTGGGAG                       │   19 │  59.3 │
+│ HDRfw      │ GGTTCAGGTGGAGTGGGAGTGCACCAGGCCACTTGTC     │   37 │  77.1 │
+│ HDRrv      │ CCGAGAGTGAGCATCATCGTTTCATGCAGCTTAACCCGC   │   39 │  74.7 │
+│ AFfw       │ GCGGGTTAAGCTGCATGAAACGATGATGCTCACTCTCGG   │   39 │  74.7 │
+│ AFrv       │ GACAAGTGGCCTGGTGCACTCCCACTCCACCTGAACC     │   37 │  77.1 │
+└────────────┴─────────────────────────────────────────┴───────┴──────┘
+
+##############
+
+
+#############  Option number 1
+
+🔬 Primer Pair Report (HDR starts: (28, 5))
+
+🧪 HDR-only
+  FWD (len=18): Tm=60.2°C | ΔG_hairpin=-0.37 | ΔG_homodimer=-6.06
+  REV (len=18): Tm=58.1°C | ΔG_hairpin=0.00 | ΔG_homodimer=-8.91
+  Heterodimer ΔG = -3.38 kcal/mol
+
+🧪 HDR
+  FWD (len=37): Tm=77.1°C | ΔG_hairpin=-2.05 | ΔG_homodimer=-8.03
+  REV (len=40): Tm=75.6°C | ΔG_hairpin=-0.83 | ΔG_homodimer=-3.27
+  Heterodimer ΔG = -4.61 kcal/mol
+
+🧪 AF
+  FWD (len=40): Tm=75.6°C | ΔG_hairpin=-0.57 | ΔG_homodimer=-8.91
+  REV (len=37): Tm=77.1°C | ΔG_hairpin=-1.27 | ΔG_homodimer=-8.81
+  Heterodimer ΔG = -2.39 kcal/mol
+
+
+🧬 Primer list
+┌────────────┬─────────────────────────────────────────┬───────┬──────┐
+│ Name       │ Sequence                                │  Len  │  Tm  │
+├────────────┼─────────────────────────────────────────┼───────┼──────┤
+│ oh_leftHDR │ TGCACCAGGCCACTTGTC                        │   18 │  60.2 │
+│ oh_rightHDR │ GCGGGTTAAGCTGCATGA                        │   18 │  58.1 │
+│ oh_leftAF  │ AACGATGATGCTCACTCTCGGG                    │   22 │  62.4 │
+│ oh_rightAF │ GGTTCAGGTGGAGTGGGAG                       │   19 │  59.3 │
+│ HDRfw      │ GGTTCAGGTGGAGTGGGAGTGCACCAGGCCACTTGTC     │   37 │  77.1 │
+│ HDRrv      │ CCCGAGAGTGAGCATCATCGTTTCATGCAGCTTAACCCGC  │   40 │  75.6 │
+│ AFfw       │ GCGGGTTAAGCTGCATGAAACGATGATGCTCACTCTCGGG  │   40 │  75.6 │
+│ AFrv       │ GACAAGTGGCCTGGTGCACTCCCACTCCACCTGAACC     │   37 │  77.1 │
+└────────────┴─────────────────────────────────────────┴───────┴──────┘
+
+##############
+
+
+#############  Option number 1
+
+🔬 Primer Pair Report (HDR starts: (28, 5))
+
+🧪 HDR-only
+  FWD (len=18): Tm=60.2°C | ΔG_hairpin=-0.37 | ΔG_homodimer=-6.06
+  REV (len=18): Tm=58.1°C | ΔG_hairpin=0.00 | ΔG_homodimer=-8.91
+  Heterodimer ΔG = -3.38 kcal/mol
+
+🧪 HDR
+  FWD (len=36): Tm=76.1°C | ΔG_hairpin=-2.05 | ΔG_homodimer=-8.03
+  REV (len=39): Tm=74.7°C | ΔG_hairpin=-0.83 | ΔG_homodimer=-3.27
+  Heterodimer ΔG = -4.61 kcal/mol
+
+🧪 AF
+  FWD (len=39): Tm=74.7°C | ΔG_hairpin=-0.57 | ΔG_homodimer=-8.91
+  REV (len=36): Tm=76.1°C | ΔG_hairpin=-1.27 | ΔG_homodimer=-8.81
+  Heterodimer ΔG = -2.39 kcal/mol
+
+
+🧬 Primer list
+┌────────────┬─────────────────────────────────────────┬───────┬──────┐
+│ Name       │ Sequence                                │  Len  │  Tm  │
+├────────────┼─────────────────────────────────────────┼───────┼──────┤
+│ oh_leftHDR │ TGCACCAGGCCACTTGTC                        │   18 │  60.2 │
+│ oh_rightHDR │ GCGGGTTAAGCTGCATGA                        │   18 │  58.1 │
+│ oh_leftAF  │ AACGATGATGCTCACTCTCGG                     │   21 │  60.2 │
+│ oh_rightAF │ GTTCAGGTGGAGTGGGAG                        │   18 │  56.6 │
+│ HDRfw      │ GTTCAGGTGGAGTGGGAGTGCACCAGGCCACTTGTC      │   36 │  76.1 │
+│ HDRrv      │ CCGAGAGTGAGCATCATCGTTTCATGCAGCTTAACCCGC   │   39 │  74.7 │
+│ AFfw       │ GCGGGTTAAGCTGCATGAAACGATGATGCTCACTCTCGG   │   39 │  74.7 │
+│ AFrv       │ GACAAGTGGCCTGGTGCACTCCCACTCCACCTGAAC      │   36 │  76.1 │
+└────────────┴─────────────────────────────────────────┴───────┴──────┘
+
+##############
+
+
+#############  Option number 1
+
+🔬 Primer Pair Report (HDR starts: (28, 5))
+
+🧪 HDR-only
+  FWD (len=18): Tm=60.2°C | ΔG_hairpin=-0.37 | ΔG_homodimer=-6.06
+  REV (len=18): Tm=58.1°C | ΔG_hairpin=0.00 | ΔG_homodimer=-8.91
+  Heterodimer ΔG = -3.38 kcal/mol
+
+🧪 HDR
+  FWD (len=36): Tm=76.1°C | ΔG_hairpin=-2.05 | ΔG_homodimer=-8.03
+  REV (len=40): Tm=75.6°C | ΔG_hairpin=-0.83 | ΔG_homodimer=-3.27
+  Heterodimer ΔG = -4.61 kcal/mol
+
+🧪 AF
+  FWD (len=40): Tm=75.6°C | ΔG_hairpin=-0.57 | ΔG_homodimer=-8.91
+  REV (len=36): Tm=76.1°C | ΔG_hairpin=-1.27 | ΔG_homodimer=-8.81
+  Heterodimer ΔG = -2.39 kcal/mol
+
+
+🧬 Primer list
+┌────────────┬─────────────────────────────────────────┬───────┬──────┐
+│ Name       │ Sequence                                │  Len  │  Tm  │
+├────────────┼─────────────────────────────────────────┼───────┼──────┤
+│ oh_leftHDR │ TGCACCAGGCCACTTGTC                        │   18 │  60.2 │
+│ oh_rightHDR │ GCGGGTTAAGCTGCATGA                        │   18 │  58.1 │
+│ oh_leftAF  │ AACGATGATGCTCACTCTCGGG                    │   22 │  62.4 │
+│ oh_rightAF │ GTTCAGGTGGAGTGGGAG                        │   18 │  56.6 │
+│ HDRfw      │ GTTCAGGTGGAGTGGGAGTGCACCAGGCCACTTGTC      │   36 │  76.1 │
+│ HDRrv      │ CCCGAGAGTGAGCATCATCGTTTCATGCAGCTTAACCCGC  │   40 │  75.6 │
+│ AFfw       │ GCGGGTTAAGCTGCATGAAACGATGATGCTCACTCTCGGG  │   40 │  75.6 │
+│ AFrv       │ GACAAGTGGCCTGGTGCACTCCCACTCCACCTGAAC      │   36 │  76.1 │
+└────────────┴─────────────────────────────────────────┴───────┴──────┘
+
+##############
+
+
+#############  Option number 1
+
+🔬 Primer Pair Report (HDR starts: (28, 5))
+
+🧪 HDR-only
+  FWD (len=18): Tm=60.2°C | ΔG_hairpin=-0.37 | ΔG_homodimer=-6.06
+  REV (len=18): Tm=58.1°C | ΔG_hairpin=0.00 | ΔG_homodimer=-8.91
+  Heterodimer ΔG = -3.38 kcal/mol
+
+🧪 HDR
+  FWD (len=38): Tm=77.7°C | ΔG_hairpin=-2.05 | ΔG_homodimer=-8.03
+  REV (len=39): Tm=74.7°C | ΔG_hairpin=-0.83 | ΔG_homodimer=-3.27
+  Heterodimer ΔG = -5.23 kcal/mol
+
+🧪 AF
+  FWD (len=39): Tm=74.7°C | ΔG_hairpin=-0.57 | ΔG_homodimer=-8.91
+  REV (len=38): Tm=77.7°C | ΔG_hairpin=-1.27 | ΔG_homodimer=-8.81
+  Heterodimer ΔG = -3.36 kcal/mol
+
+
+🧬 Primer list
+┌────────────┬─────────────────────────────────────────┬───────┬──────┐
+│ Name       │ Sequence                                │  Len  │  Tm  │
+├────────────┼─────────────────────────────────────────┼───────┼──────┤
+│ oh_leftHDR │ TGCACCAGGCCACTTGTC                        │   18 │  60.2 │
+│ oh_rightHDR │ GCGGGTTAAGCTGCATGA                        │   18 │  58.1 │
+│ oh_leftAF  │ AACGATGATGCTCACTCTCGG                     │   21 │  60.2 │
+│ oh_rightAF │ TGGTTCAGGTGGAGTGGGAG                      │   20 │  61.1 │
+│ HDRfw      │ TGGTTCAGGTGGAGTGGGAGTGCACCAGGCCACTTGTC    │   38 │  77.7 │
+│ HDRrv      │ CCGAGAGTGAGCATCATCGTTTCATGCAGCTTAACCCGC   │   39 │  74.7 │
+│ AFfw       │ GCGGGTTAAGCTGCATGAAACGATGATGCTCACTCTCGG   │   39 │  74.7 │
+│ AFrv       │ GACAAGTGGCCTGGTGCACTCCCACTCCACCTGAACCA    │   38 │  77.7 │
+└────────────┴─────────────────────────────────────────┴───────┴──────┘
+
+##############
+
+
+#############  Option number 1
+
+🔬 Primer Pair Report (HDR starts: (28, 5))
+
+🧪 HDR-only
+  FWD (len=18): Tm=60.2°C | ΔG_hairpin=-0.37 | ΔG_homodimer=-6.06
+  REV (len=18): Tm=58.1°C | ΔG_hairpin=0.00 | ΔG_homodimer=-8.91
+  Heterodimer ΔG = -3.38 kcal/mol
+
+🧪 HDR
+  FWD (len=39): Tm=77.5°C | ΔG_hairpin=-2.05 | ΔG_homodimer=-8.03
+  REV (len=39): Tm=74.7°C | ΔG_hairpin=-0.83 | ΔG_homodimer=-3.27
+  Heterodimer ΔG = -5.23 kcal/mol
+
+🧪 AF
+  FWD (len=39): Tm=74.7°C | ΔG_hairpin=-0.57 | ΔG_homodimer=-8.91
+  REV (len=39): Tm=77.5°C | ΔG_hairpin=-1.27 | ΔG_homodimer=-8.81
+  Heterodimer ΔG = -3.36 kcal/mol
+
+
+🧬 Primer list
+┌────────────┬─────────────────────────────────────────┬───────┬──────┐
+│ Name       │ Sequence                                │  Len  │  Tm  │
+├────────────┼─────────────────────────────────────────┼───────┼──────┤
+│ oh_leftHDR │ TGCACCAGGCCACTTGTC                        │   18 │  60.2 │
+│ oh_rightHDR │ GCGGGTTAAGCTGCATGA                        │   18 │  58.1 │
+│ oh_leftAF  │ AACGATGATGCTCACTCTCGG                     │   21 │  60.2 │
+│ oh_rightAF │ TTGGTTCAGGTGGAGTGGGAG                     │   21 │  61.7 │
+│ HDRfw      │ TTGGTTCAGGTGGAGTGGGAGTGCACCAGGCCACTTGTC   │   39 │  77.5 │
+│ HDRrv      │ CCGAGAGTGAGCATCATCGTTTCATGCAGCTTAACCCGC   │   39 │  74.7 │
+│ AFfw       │ GCGGGTTAAGCTGCATGAAACGATGATGCTCACTCTCGG   │   39 │  74.7 │
+│ AFrv       │ GACAAGTGGCCTGGTGCACTCCCACTCCACCTGAACCAA   │   39 │  77.5 │
+└────────────┴─────────────────────────────────────────┴───────┴──────┘
+
+##############
+
+
+#############  Option number 1
+
+🔬 Primer Pair Report (HDR starts: (28, 5))
+
+🧪 HDR-only
+  FWD (len=18): Tm=60.2°C | ΔG_hairpin=-0.37 | ΔG_homodimer=-6.06
+  REV (len=18): Tm=58.1°C | ΔG_hairpin=0.00 | ΔG_homodimer=-8.91
+  Heterodimer ΔG = -3.38 kcal/mol
+
+🧪 HDR
+  FWD (len=40): Tm=77.5°C | ΔG_hairpin=-2.05 | ΔG_homodimer=-8.03
+  REV (len=39): Tm=74.7°C | ΔG_hairpin=-0.83 | ΔG_homodimer=-3.27
+  Heterodimer ΔG = -5.23 kcal/mol
+
+🧪 AF
+  FWD (len=39): Tm=74.7°C | ΔG_hairpin=-0.57 | ΔG_homodimer=-8.91
+  REV (len=40): Tm=77.5°C | ΔG_hairpin=-1.27 | ΔG_homodimer=-8.81
+  Heterodimer ΔG = -3.36 kcal/mol
+
+
+🧬 Primer list
+┌────────────┬─────────────────────────────────────────┬───────┬──────┐
+│ Name       │ Sequence                                │  Len  │  Tm  │
+├────────────┼─────────────────────────────────────────┼───────┼──────┤
+│ oh_leftHDR │ TGCACCAGGCCACTTGTC                        │   18 │  60.2 │
+│ oh_rightHDR │ GCGGGTTAAGCTGCATGA                        │   18 │  58.1 │
+│ oh_leftAF  │ AACGATGATGCTCACTCTCGG                     │   21 │  60.2 │
+│ oh_rightAF │ CTTGGTTCAGGTGGAGTGGGAG                    │   22 │  62.5 │
+│ HDRfw      │ CTTGGTTCAGGTGGAGTGGGAGTGCACCAGGCCACTTGTC  │   40 │  77.5 │
+│ HDRrv      │ CCGAGAGTGAGCATCATCGTTTCATGCAGCTTAACCCGC   │   39 │  74.7 │
+│ AFfw       │ GCGGGTTAAGCTGCATGAAACGATGATGCTCACTCTCGG   │   39 │  74.7 │
+│ AFrv       │ GACAAGTGGCCTGGTGCACTCCCACTCCACCTGAACCAAG  │   40 │  77.5 │
+└────────────┴─────────────────────────────────────────┴───────┴──────┘
+
+##############
+
+
+#############  Option number 1
+
+🔬 Primer Pair Report (HDR starts: (28, 5))
+
+🧪 HDR-only
+  FWD (len=18): Tm=60.2°C | ΔG_hairpin=-0.37 | ΔG_homodimer=-6.06
+  REV (len=18): Tm=58.1°C | ΔG_hairpin=0.00 | ΔG_homodimer=-8.91
+  Heterodimer ΔG = -3.38 kcal/mol
+
+🧪 HDR
+  FWD (len=38): Tm=77.7°C | ΔG_hairpin=-2.05 | ΔG_homodimer=-8.03
+  REV (len=40): Tm=75.6°C | ΔG_hairpin=-0.83 | ΔG_homodimer=-3.27
+  Heterodimer ΔG = -5.23 kcal/mol
+
+🧪 AF
+  FWD (len=40): Tm=75.6°C | ΔG_hairpin=-0.57 | ΔG_homodimer=-8.91
+  REV (len=38): Tm=77.7°C | ΔG_hairpin=-1.27 | ΔG_homodimer=-8.81
+  Heterodimer ΔG = -3.36 kcal/mol
+
+
+🧬 Primer list
+┌────────────┬─────────────────────────────────────────┬───────┬──────┐
+│ Name       │ Sequence                                │  Len  │  Tm  │
+├────────────┼─────────────────────────────────────────┼───────┼──────┤
+│ oh_leftHDR │ TGCACCAGGCCACTTGTC                        │   18 │  60.2 │
+│ oh_rightHDR │ GCGGGTTAAGCTGCATGA                        │   18 │  58.1 │
+│ oh_leftAF  │ AACGATGATGCTCACTCTCGGG                    │   22 │  62.4 │
+│ oh_rightAF │ TGGTTCAGGTGGAGTGGGAG                      │   20 │  61.1 │
+│ HDRfw      │ TGGTTCAGGTGGAGTGGGAGTGCACCAGGCCACTTGTC    │   38 │  77.7 │
+│ HDRrv      │ CCCGAGAGTGAGCATCATCGTTTCATGCAGCTTAACCCGC  │   40 │  75.6 │
+│ AFfw       │ GCGGGTTAAGCTGCATGAAACGATGATGCTCACTCTCGGG  │   40 │  75.6 │
+│ AFrv       │ GACAAGTGGCCTGGTGCACTCCCACTCCACCTGAACCA    │   38 │  77.7 │
+└────────────┴─────────────────────────────────────────┴───────┴──────┘
+
+##############
+
+
+#############  Option number 1
+
+🔬 Primer Pair Report (HDR starts: (28, 5))
+
+🧪 HDR-only
+  FWD (len=18): Tm=60.2°C | ΔG_hairpin=-0.37 | ΔG_homodimer=-6.06
+  REV (len=18): Tm=58.1°C | ΔG_hairpin=0.00 | ΔG_homodimer=-8.91
+  Heterodimer ΔG = -3.38 kcal/mol
+
+🧪 HDR
+  FWD (len=39): Tm=77.5°C | ΔG_hairpin=-2.05 | ΔG_homodimer=-8.03
+  REV (len=40): Tm=75.6°C | ΔG_hairpin=-0.83 | ΔG_homodimer=-3.27
+  Heterodimer ΔG = -5.23 kcal/mol
+
+🧪 AF
+  FWD (len=40): Tm=75.6°C | ΔG_hairpin=-0.57 | ΔG_homodimer=-8.91
+  REV (len=39): Tm=77.5°C | ΔG_hairpin=-1.27 | ΔG_homodimer=-8.81
+  Heterodimer ΔG = -3.36 kcal/mol
+
+
+🧬 Primer list
+┌────────────┬─────────────────────────────────────────┬───────┬──────┐
+│ Name       │ Sequence                                │  Len  │  Tm  │
+├────────────┼─────────────────────────────────────────┼───────┼──────┤
+│ oh_leftHDR │ TGCACCAGGCCACTTGTC                        │   18 │  60.2 │
+│ oh_rightHDR │ GCGGGTTAAGCTGCATGA                        │   18 │  58.1 │
+│ oh_leftAF  │ AACGATGATGCTCACTCTCGGG                    │   22 │  62.4 │
+│ oh_rightAF │ TTGGTTCAGGTGGAGTGGGAG                     │   21 │  61.7 │
+│ HDRfw      │ TTGGTTCAGGTGGAGTGGGAGTGCACCAGGCCACTTGTC   │   39 │  77.5 │
+│ HDRrv      │ CCCGAGAGTGAGCATCATCGTTTCATGCAGCTTAACCCGC  │   40 │  75.6 │
+│ AFfw       │ GCGGGTTAAGCTGCATGAAACGATGATGCTCACTCTCGGG  │   40 │  75.6 │
+│ AFrv       │ GACAAGTGGCCTGGTGCACTCCCACTCCACCTGAACCAA   │   39 │  77.5 │
+└────────────┴─────────────────────────────────────────┴───────┴──────┘
+
+##############
+
+
+#############  Option number 1
+
+🔬 Primer Pair Report (HDR starts: (28, 5))
+
+🧪 HDR-only
+  FWD (len=18): Tm=60.2°C | ΔG_hairpin=-0.37 | ΔG_homodimer=-6.06
+  REV (len=18): Tm=58.1°C | ΔG_hairpin=0.00 | ΔG_homodimer=-8.91
+  Heterodimer ΔG = -3.38 kcal/mol
+
+🧪 HDR
+  FWD (len=40): Tm=77.5°C | ΔG_hairpin=-2.05 | ΔG_homodimer=-8.03
+  REV (len=40): Tm=75.6°C | ΔG_hairpin=-0.83 | ΔG_homodimer=-3.27
+  Heterodimer ΔG = -5.23 kcal/mol
+
+🧪 AF
+  FWD (len=40): Tm=75.6°C | ΔG_hairpin=-0.57 | ΔG_homodimer=-8.91
+  REV (len=40): Tm=77.5°C | ΔG_hairpin=-1.27 | ΔG_homodimer=-8.81
+  Heterodimer ΔG = -3.36 kcal/mol
+
+
+🧬 Primer list
+┌────────────┬─────────────────────────────────────────┬───────┬──────┐
+│ Name       │ Sequence                                │  Len  │  Tm  │
+├────────────┼─────────────────────────────────────────┼───────┼──────┤
+│ oh_leftHDR │ TGCACCAGGCCACTTGTC                        │   18 │  60.2 │
+│ oh_rightHDR │ GCGGGTTAAGCTGCATGA                        │   18 │  58.1 │
+│ oh_leftAF  │ AACGATGATGCTCACTCTCGGG                    │   22 │  62.4 │
+│ oh_rightAF │ CTTGGTTCAGGTGGAGTGGGAG                    │   22 │  62.5 │
+│ HDRfw      │ CTTGGTTCAGGTGGAGTGGGAGTGCACCAGGCCACTTGTC  │   40 │  77.5 │
+│ HDRrv      │ CCCGAGAGTGAGCATCATCGTTTCATGCAGCTTAACCCGC  │   40 │  75.6 │
+│ AFfw       │ GCGGGTTAAGCTGCATGAAACGATGATGCTCACTCTCGGG  │   40 │  75.6 │
+│ AFrv       │ GACAAGTGGCCTGGTGCACTCCCACTCCACCTGAACCAAG  │   40 │  77.5 │
+└────────────┴─────────────────────────────────────────┴───────┴──────┘
+
+##############
+
+
