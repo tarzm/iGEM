@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bioreactor Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Bioreactor Monitor <span class="emoji" id="status-emoji">❓</span></h1>
+      <p id="status-message">Loading sensor data...</p>
+    </header>
+
+    <main>
+      <section class="cards">
+        <div class="card" id="card-temp">
+          <div class="card-title">Temperature</div>
+          <div class="card-value"><span id="temp-c">--</span>°C</div>
+          <div class="card-sub"><span id="temp-f">--</span>°F</div>
+        </div>
+
+        <div class="card" id="card-ph">
+          <div class="card-title">pH</div>
+          <div class="card-value"><span id="ph">--</span></div>
+          <div class="card-sub">Optimal: 6.5–8.5</div>
+        </div>
+
+        <div class="card" id="card-fan">
+          <div class="card-title">Cooling Fan</div>
+          <div class="card-value"><span id="fan-status">OFF</span></div>
+          <div class="controls">
+            <button id="btn-fan-on">Start Fan</button>
+            <button id="btn-fan-off" class="secondary">Stop Fan</button>
+          </div>
+          <div class="threshold">
+            <label>
+              Fan threshold (°C)
+              <input type="number" id="threshold" step="0.5" />
+              <button id="btn-save-threshold" class="secondary small">Save</button>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="banner" id="algae-banner">
+        <div class="emoji" id="algae-emoji">🌱</div>
+        <div class="text">
+          <h2 id="algae-title">Algae status</h2>
+          <p id="algae-desc">—</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <small>Made with 💚 by your iGEM team</small>
+    </footer>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
