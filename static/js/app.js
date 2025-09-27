@@ -21,19 +21,11 @@ function updateUI(data) {
   const tF = data.temperature_f;
   const pH = data.ph;
   const fan = data.fan_running;
-  const status = data.algae_status || { emoji: '❓', message: 'Unknown' };
 
   setText('temp-c', tC != null ? tC.toFixed(2) : '--');
   setText('temp-f', tF != null ? tF.toFixed(2) : '--');
   setText('ph', pH != null ? pH.toFixed(2) : '--');
-  setText('fan-status', fan ? 'ON' : 'OFF');
-
-  setText('status-emoji', status.emoji);
-  setText('status-message', status.message);
-
-  document.getElementById('algae-emoji').textContent = status.emoji;
-  document.getElementById('algae-title').textContent = status.status ? status.status.toUpperCase() : 'STATUS';
-  document.getElementById('algae-desc').textContent = status.message || '';
+  setText('fan-note', fan ? 'ON' : 'OFF');
 
   // Color coding
   if (tC != null) {
@@ -47,7 +39,8 @@ function updateUI(data) {
     else setCardState('card-ph', 'bad');
   }
 
-  setCardState('card-fan', fan ? 'good' : 'warn');
+  // Push to charts
+  appendToCharts({ tC, pH });
 }
 
 async function refresh() {
@@ -59,43 +52,158 @@ async function refresh() {
   }
 }
 
-async function loadConfig() {
-  try {
-    const cfg = await fetchJSON('/api/config');
-    document.getElementById('threshold').value = cfg.fan_temp_threshold;
-  } catch (e) {
-    console.error('Failed to load config', e);
-  }
-}
-
-async function setFan(on) {
-  try {
-    await fetchJSON('/api/fan', { method: 'POST', body: JSON.stringify({ action: on ? 'start' : 'stop' }) });
-    await refresh();
-  } catch (e) {
-    console.error('Failed to set fan', e);
-  }
-}
-
-async function saveThreshold() {
-  const v = parseFloat(document.getElementById('threshold').value);
-  if (Number.isNaN(v)) return;
-  try {
-    await fetchJSON('/api/config', { method: 'POST', body: JSON.stringify({ fan_temp_threshold: v }) });
-    await refresh();
-  } catch (e) {
-    console.error('Failed to save threshold', e);
-  }
-}
-
 function init() {
-  document.getElementById('btn-fan-on').addEventListener('click', () => setFan(true));
-  document.getElementById('btn-fan-off').addEventListener('click', () => setFan(false));
-  document.getElementById('btn-save-threshold').addEventListener('click', saveThreshold);
-
-  loadConfig();
+  setupCharts();
   refresh();
   setInterval(refresh, 2000);
 }
 
 window.addEventListener('DOMContentLoaded', init);
+
+// ==== Charts ====
+let tempChart = null;
+let phChart = null;
+const windowMs = 30 * 60 * 1000; // 30 minutes
+// Parallel arrays for timestamps (ms since epoch) and values
+const tempTimes = [];
+const phTimes = [];
+const tempValues = [];
+const phValues = [];
+// Plotting cadence (downsample to avoid clutter): one point every 10 seconds
+const plotIntervalMs = 10 * 1000;
+let lastPlottedMs = 0;
+
+function setupCharts() {
+  const ctxT = document.getElementById('tempChart');
+  const ctxP = document.getElementById('phChart');
+
+  const commonOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { mode: 'nearest', intersect: false }
+    },
+    scales: {
+      x: {
+        type: 'linear',
+        min: -1800, // -30 min in seconds
+        max: 0,
+        ticks: {
+          maxRotation: 0,
+          autoSkip: false,
+          count: 4,
+          callback: (value) => formatRelativeTick(value)
+        },
+        grid: { display: false },
+        title: { display: true, text: 'time' }
+      },
+      y: {
+        grid: { color: 'rgba(0,0,0,0.06)' }
+      }
+    }
+  };
+
+  tempChart = new Chart(ctxT, {
+    type: 'line',
+    data: {
+      datasets: [{
+        label: '°C',
+        data: [], // {x: seconds relative to now (negative..0), y: temp}
+        borderColor: '#0b7a3c',
+        backgroundColor: 'rgba(11,122,60,0.15)',
+        tension: 0.25,
+        pointRadius: 0,
+        fill: true
+      }]
+    },
+    options: {
+      ...commonOptions,
+      scales: {
+        ...commonOptions.scales,
+        y: { ...commonOptions.scales.y, min: 10, max: 40, title: { display: true, text: '°C' } }
+      }
+    }
+  });
+
+  phChart = new Chart(ctxP, {
+    type: 'line',
+    data: {
+      datasets: [{
+        label: 'pH',
+        data: [], // {x: seconds relative to now (negative..0), y: pH}
+        borderColor: '#1a9850',
+        backgroundColor: 'rgba(26,152,80,0.15)',
+        tension: 0.25,
+        pointRadius: 0,
+        fill: true
+      }]
+    },
+    options: {
+      ...commonOptions,
+      scales: {
+        ...commonOptions.scales,
+        y: { ...commonOptions.scales.y, min: 5, max: 9, title: { display: true, text: 'pH' } }
+      }
+    }
+  });
+}
+
+function appendToCharts({ tC, pH }) {
+  const now = new Date();
+  const nowMs = now.getTime();
+  const cutoff = nowMs - windowMs;
+  // Append new samples
+  if (lastPlottedMs && (nowMs - lastPlottedMs) < plotIntervalMs) {
+    // Too soon to add a new plotted point; skip
+    return;
+  }
+  lastPlottedMs = nowMs;
+
+  // Temperature chart
+  if (tempChart) {
+    tempTimes.push(nowMs);
+    tempValues.push(tC != null ? tC : null);
+    // Trim to last 30 minutes
+    while (tempTimes.length && tempTimes[0] < cutoff) {
+      tempTimes.shift();
+      tempValues.shift();
+    }
+    // Recompute dataset as {x,y} with x in seconds relative to now
+    tempChart.data.datasets[0].data = tempTimes.map((t, i) => ({ x: (t - nowMs) / 1000, y: tempValues[i] }));
+    // Ensure x-axis reflects the current window [-1800..0]
+    tempChart.options.scales.x.min = -windowMs / 1000;
+    tempChart.options.scales.x.max = 0;
+    tempChart.update('none');
+  }
+
+  // pH chart
+  if (phChart) {
+    phTimes.push(nowMs);
+    phValues.push(pH != null ? pH : null);
+    // Trim to last 30 minutes
+    while (phTimes.length && phTimes[0] < cutoff) {
+      phTimes.shift();
+      phValues.shift();
+    }
+    // Recompute dataset as {x,y}
+    phChart.data.datasets[0].data = phTimes.map((t, i) => ({ x: (t - nowMs) / 1000, y: phValues[i] }));
+    phChart.options.scales.x.min = -windowMs / 1000;
+    phChart.options.scales.x.max = 0;
+    phChart.update('none');
+  }
+}
+
+function formatRelativeTick(value) {
+  const v = Math.round(value);
+  if (v === 0) return 'now';
+  const neg = -v;
+  if (neg < 60) {
+    // Round to nearest 5 seconds for readability
+    const s = Math.round(neg / 5) * 5;
+    return `-${s} s`;
+  }
+  const m = Math.round(neg / 60);
+  return `-${m} min`;
+}
