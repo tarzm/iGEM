@@ -24,6 +24,16 @@ def api_status():
     return jsonify(data)
 
 
+@app.route("/api/history", methods=["GET"])
+def api_history():
+    try:
+        minutes = int(request.args.get("minutes", 30))
+    except Exception:
+        minutes = 30
+    history = monitor.get_history(minutes=minutes)
+    return jsonify({"minutes": minutes, "data": history})
+
+
 @app.route("/api/fan", methods=["POST"])
 def api_fan():
     body = request.get_json(silent=True) or {}

@@ -4,6 +4,48 @@ async function fetchJSON(url, opts = {}) {
   return await res.json();
 }
 
+async function seedHistory(minutes) {
+  try {
+    const res = await fetch(`/api/history?minutes=${encodeURIComponent(minutes)}`);
+    if (!res.ok) return;
+    const payload = await res.json();
+    const rows = payload.data || [];
+    // Reset arrays
+    tempTimes.length = 0; tempValues.length = 0;
+    phTimes.length = 0; phValues.length = 0;
+    // Only keep last 30 minutes in case backend returned more
+    const nowMs = Date.now();
+    const cutoff = nowMs - windowMs;
+    let lastKept = 0;
+    for (const r of rows) {
+      const ts = typeof r.ts === 'number' ? r.ts : Date.parse(r.timestamp);
+      if (ts >= cutoff) {
+        if (ts - lastKept >= plotIntervalMs) {
+          tempTimes.push(ts);
+          tempValues.push(r.temperature_c != null ? r.temperature_c : null);
+          phTimes.push(ts);
+          phValues.push(r.ph != null ? r.ph : null);
+          lastKept = ts;
+        }
+      }
+    }
+    // Snap lastBucket to last historical bucket to honor 10s spacing
+    if (tempTimes.length) {
+      lastBucket = Math.floor(tempTimes[tempTimes.length - 1] / plotIntervalMs);
+    }
+    // Render datasets
+    const nowSec = Date.now() / 1000;
+    if (tempChart) {
+      tempChart.data.datasets[0].data = tempTimes.map((t, i) => ({ x: (t / 1000) - nowSec, y: tempValues[i] }));
+      tempChart.update('none');
+    }
+    if (phChart) {
+      phChart.data.datasets[0].data = phTimes.map((t, i) => ({ x: (t / 1000) - nowSec, y: phValues[i] }));
+      phChart.update('none');
+    }
+  } catch {}
+}
+
 function setText(id, value) {
   const el = document.getElementById(id);
   if (el) el.textContent = value;
@@ -54,8 +96,19 @@ async function refresh() {
 
 function init() {
   setupCharts();
-  refresh();
-  setInterval(refresh, 2000);
+  // Load 30 min history first, then start polling
+  seedHistory(30).then(() => {
+    refresh();
+    setInterval(refresh, 2000);
+  });
+
+  // Fullscreen toggle
+  const fsBtn = document.getElementById('btn-fullscreen');
+  if (fsBtn) {
+    fsBtn.addEventListener('click', toggleFullscreen);
+    document.addEventListener('fullscreenchange', updateFullscreenButton);
+    updateFullscreenButton();
+  }
 }
 
 window.addEventListener('DOMContentLoaded', init);
@@ -71,7 +124,7 @@ const tempValues = [];
 const phValues = [];
 // Plotting cadence (downsample to avoid clutter): one point every 10 seconds
 const plotIntervalMs = 10 * 1000;
-let lastPlottedMs = 0;
+let lastBucket = null; // integer bucket index = floor(ts / plotIntervalMs)
 
 function setupCharts() {
   const ctxT = document.getElementById('tempChart');
@@ -155,11 +208,12 @@ function appendToCharts({ tC, pH }) {
   const nowMs = now.getTime();
   const cutoff = nowMs - windowMs;
   // Append new samples
-  if (lastPlottedMs && (nowMs - lastPlottedMs) < plotIntervalMs) {
-    // Too soon to add a new plotted point; skip
+  const bucket = Math.floor(nowMs / plotIntervalMs);
+  if (lastBucket !== null && bucket === lastBucket) {
+    // Still in the same 10s bucket; skip plotting
     return;
   }
-  lastPlottedMs = nowMs;
+  lastBucket = bucket;
 
   // Temperature chart
   if (tempChart) {
@@ -206,4 +260,20 @@ function formatRelativeTick(value) {
   }
   const m = Math.round(neg / 60);
   return `-${m} min`;
+}
+
+// ==== Fullscreen helpers ====
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+}
+
+function updateFullscreenButton() {
+  const fsBtn = document.getElementById('btn-fullscreen');
+  if (!fsBtn) return;
+  const inFs = !!document.fullscreenElement;
+  fsBtn.textContent = inFs ? 'Exit Fullscreen' : 'Fullscreen';
 }

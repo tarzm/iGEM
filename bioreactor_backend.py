@@ -8,10 +8,11 @@ import glob
 import time
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, Optional
 import threading
 import random
+from collections import deque
 
 # For Raspberry Pi GPIO (will be mocked if not available)
 try:
@@ -186,6 +187,8 @@ class BioreactorMonitor:
             'timestamp': None,
             'status': 'unknown'
         }
+        # In-memory history: list of dicts with timestamp (iso), ts (epoch ms), temperature_c, ph, fan_running
+        self.history = deque()  # unbounded; we'll trim by time window on append
         
         self.running = False
         self.monitor_thread = None
@@ -231,7 +234,25 @@ class BioreactorMonitor:
             'timestamp': datetime.now().isoformat(),
             'algae_status': algae_status
         }
-        
+        # Append to in-memory history and trim to a reasonable window (e.g., 24h)
+        try:
+            now_dt = datetime.now()
+            entry = {
+                'ts': int(now_dt.timestamp() * 1000),
+                'timestamp': self.current_data['timestamp'],
+                'temperature_c': self.current_data['temperature_c'],
+                'ph': self.current_data['ph'],
+                'fan_running': self.current_data['fan_running'],
+            }
+            self.history.append(entry)
+            # Trim anything older than 24 hours to bound memory usage
+            cutoff = now_dt - timedelta(hours=24)
+            cutoff_ms = int(cutoff.timestamp() * 1000)
+            while self.history and self.history[0]['ts'] < cutoff_ms:
+                self.history.popleft()
+        except Exception as e:
+            logger.debug(f"History append/trim error: {e}")
+
         return self.current_data
     
     def start_monitoring(self, interval: float = 2.0):
@@ -264,6 +285,16 @@ class BioreactorMonitor:
     def get_current_data(self) -> Dict:
         """Get current sensor data"""
         return self.current_data.copy()
+
+    def get_history(self, minutes: int = 30):
+        """Return history entries within the last `minutes` minutes as a list of dicts"""
+        try:
+            minutes = max(1, min(int(minutes), 24 * 60))  # clamp 1..1440
+        except Exception:
+            minutes = 30
+        now_ms = int(datetime.now().timestamp() * 1000)
+        cutoff_ms = now_ms - minutes * 60 * 1000
+        return [e for e in list(self.history) if e['ts'] >= cutoff_ms]
 
 
 if __name__ == "__main__":

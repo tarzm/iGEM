@@ -3,6 +3,7 @@ html, body { margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-syst
 .container { max-width: 980px; margin: 0 auto; padding: 28px; }
 header { display: flex; flex-direction: column; gap: 4px; margin-bottom: 20px; }
 h1 { font-size: 30px; margin: 0; font-weight: 800; background: linear-gradient(90deg, #0b7a3c, #20b26b); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.header-row { display: flex; align-items: center; justify-content: space-between; }
 
 .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
 .card { background: #ffffff; border: 1px solid #d9e8de; padding: 18px; border-radius: 14px; box-shadow: 0 6px 24px rgba(10, 40, 20, 0.08); }
@@ -29,3 +30,8 @@ footer { margin-top: 28px; color: #3a5a46; text-align: center; }
 @media (max-width: 768px) {
   .charts { grid-template-columns: 1fr; }
 }
+
+/* Fullscreen button */
+.ghost { background: rgba(255,255,255,0.7); color: #0e3c22; border: 1px solid #d9e8de; padding: 6px 8px; border-radius: 10px; font-weight: 600; cursor: pointer; }
+.ghost:hover { background: #ffffff; }
+.fs-fixed { position: fixed; top: 14px; right: 14px; z-index: 1000; box-shadow: 0 6px 24px rgba(10, 40, 20, 0.12); }
