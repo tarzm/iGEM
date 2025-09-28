@@ -75,6 +75,7 @@ def shutdown_session(exception=None):
 
 if __name__ == "__main__":
     try:
-        app.run(host="0.0.0.0", port=5050, debug=True)
+        # Disable debug reloader on the Pi to avoid double-initialization of GPIO (GPIO busy)
+        app.run(host="0.0.0.0", port=5050, debug=False, use_reloader=False)
     finally:
         shutdown_event.set()
