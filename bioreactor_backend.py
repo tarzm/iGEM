@@ -23,6 +23,13 @@ except ImportError:
     GPIO_AVAILABLE = False
     print("RPi.GPIO not available - using mock GPIO for development")
 
+# gpiozero support (preferred on Raspberry Pi 5)
+try:
+    from gpiozero import OutputDevice as GZOutputDevice
+    GPIOZERO_AVAILABLE = True
+except Exception:
+    GPIOZERO_AVAILABLE = False
+
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
@@ -73,27 +80,24 @@ class TemperatureSensor:
             logger.error(f"Error finding temperature sensor: {e}")
     
     def read_celsius(self) -> Optional[float]:
-        """Read temperature in Celsius"""
+        """Read temperature in Celsius with simple parsing like fan.py (t=... in w1_slave)."""
+        # Development fallback
         if not self.device_path:
-            # Return mock data for development
             return 25.0 + random.uniform(-2, 5)
-        
-        try:
-            with open(self.device_path, 'r') as f:
-                lines = f.read().strip().splitlines()
-            
-            # Check if reading is valid
-            if lines[0].strip()[-3:] != 'YES':
-                return None
-            
-            # Extract temperature
-            temp_line = lines[1]
-            temp_mdeg = int(temp_line.split('t=')[1])
-            return temp_mdeg / 1000.0
-            
-        except Exception as e:
-            logger.error(f"Error reading temperature: {e}")
-            return None
+
+        # Try a few times to handle transient CRC states
+        for _ in range(3):
+            try:
+                with open(self.device_path, 'r') as f:
+                    data = f.read()
+                if 't=' in data:
+                    t_mdeg = int(data.split('t=')[1].strip().split()[0])
+                    return t_mdeg / 1000.0
+            except Exception as e:
+                logger.debug(f"Temp read attempt failed: {e}")
+            time.sleep(0.05)
+        logger.error("Failed to parse DS18B20 temperature (no 't=' found)")
+        return None
     
     def read_fahrenheit(self) -> Optional[float]:
         """Read temperature in Fahrenheit"""
@@ -150,22 +154,35 @@ class PHSensor:
 class FanController:
     """Controls cooling fan based on temperature"""
     
-    def __init__(self, fan_pin: int = 18, temp_threshold: float = 28.0):
-        self.fan_pin = fan_pin
-        self.temp_threshold = temp_threshold
+    def __init__(self, fan_pin: int = None, temp_threshold: float = None):
+        # Allow environment overrides to match wiring easily
+        env_pin = os.environ.get('FAN_PIN')
+        env_thr = os.environ.get('FAN_THRESHOLD')
+        self.fan_pin = int(env_pin) if env_pin is not None else (fan_pin if fan_pin is not None else 12)
+        try:
+            self.temp_threshold = float(env_thr) if env_thr is not None else (temp_threshold if temp_threshold is not None else 28.0)
+        except Exception:
+            self.temp_threshold = 28.0
         self.fan_running = False
         
-        # Initialize GPIO
-        if GPIO_AVAILABLE:
+        # Backend selection: prefer gpiozero on Pi 5, fallback to RPi.GPIO or Mock
+        self._backend = 'gpiozero' if GPIOZERO_AVAILABLE else ('rpigpio' if GPIO_AVAILABLE else 'mock')
+
+        if self._backend == 'gpiozero':
+            # Active high device; start OFF
+            self.gz_fan = GZOutputDevice(self.fan_pin, active_high=True, initial_value=False)
+        elif self._backend == 'rpigpio':
             self.gpio = GPIO
+            self.gpio.setmode(self.gpio.BCM)
+            self.gpio.setup(self.fan_pin, self.gpio.OUT)
+            self.gpio.output(self.fan_pin, self.gpio.LOW)
         else:
             self.gpio = MockGPIO
-        
-        self.gpio.setmode(self.gpio.BCM)
-        self.gpio.setup(self.fan_pin, self.gpio.OUT)
-        self.gpio.output(self.fan_pin, self.gpio.LOW)
-        
-        logger.info(f"Fan controller initialized on pin {fan_pin}, threshold: {temp_threshold}°C")
+            self.gpio.setmode(self.gpio.BCM)
+            self.gpio.setup(self.fan_pin, self.gpio.OUT)
+            self.gpio.output(self.fan_pin, self.gpio.LOW)
+
+        logger.info(f"Fan controller initialized (backend={self._backend}) on pin {self.fan_pin}, threshold: {self.temp_threshold}°C")
     
     def control_fan(self, temperature: float):
         """Control fan based on temperature"""
@@ -176,19 +193,31 @@ class FanController:
     
     def start_fan(self):
         """Start the cooling fan"""
-        self.gpio.output(self.fan_pin, self.gpio.HIGH)
+        if self._backend == 'gpiozero':
+            self.gz_fan.on()
+        else:
+            self.gpio.output(self.fan_pin, self.gpio.HIGH)
         self.fan_running = True
         logger.info("Cooling fan started")
     
     def stop_fan(self):
         """Stop the cooling fan"""
-        self.gpio.output(self.fan_pin, self.gpio.LOW)
+        if self._backend == 'gpiozero':
+            self.gz_fan.off()
+        else:
+            self.gpio.output(self.fan_pin, self.gpio.LOW)
         self.fan_running = False
         logger.info("Cooling fan stopped")
     
     def cleanup(self):
         """Cleanup GPIO resources"""
-        self.gpio.cleanup()
+        try:
+            if self._backend == 'gpiozero':
+                self.gz_fan.close()
+            else:
+                self.gpio.cleanup()
+        except Exception:
+            pass
 
 
 class BioreactorMonitor:
