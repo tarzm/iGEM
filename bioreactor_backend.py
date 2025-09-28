@@ -13,6 +13,7 @@ from typing import Dict, Optional
 import threading
 import random
 from collections import deque
+import os
 
 # For Raspberry Pi GPIO (will be mocked if not available)
 try:
@@ -107,11 +108,21 @@ class PHSensor:
     
     def __init__(self):
         self.calibration_offset = 0.0
+        # Override support (e.g., on Pi without pH hardware)
+        # Set PH_OVERRIDE (e.g., "7.2") to force a constant pH
+        env_override = os.environ.get('PH_OVERRIDE')
+        self.override_enabled = env_override is not None
+        try:
+            self.override_value = float(env_override) if env_override is not None else 7.2
+        except Exception:
+            self.override_value = 7.2
         logger.info("pH sensor initialized")
     
     def read_ph(self) -> Optional[float]:
         """Read pH value"""
         try:
+            if self.override_enabled:
+                return max(0, min(14, self.override_value + self.calibration_offset))
             # For development, return simulated pH values
             # In real implementation, this would read from ADC connected to pH probe
             base_ph = 7.2
@@ -125,6 +136,15 @@ class PHSensor:
         """Calibrate pH sensor with known reference"""
         self.calibration_offset = known_ph - measured_ph
         logger.info(f"pH sensor calibrated with offset: {self.calibration_offset}")
+
+    # Simple setters to control override at runtime
+    def set_override(self, enabled: bool, value: Optional[float] = None):
+        self.override_enabled = bool(enabled)
+        if value is not None:
+            try:
+                self.override_value = float(value)
+            except Exception:
+                pass
 
 
 class FanController:
