@@ -1,10 +1,13 @@
 How to run (day-to-day)
 Activate venv and run with your saved env settings:
+
 source .venv/bin/activate
 export PH_ADC_CHANNEL=0 PH_VREF=3.3
 export PH_CAL_LOW_PH=7.00 PH_CAL_LOW_V=1.70 PH_CAL_HIGH_PH=4.00 PH_CAL_HIGH_V=2.10
 export FAN_PIN=12 FAN_THRESHOLD=24
 python3 app.py
+
+
 Open on the Pi: http://localhost:5050
 Open from another device on same network/hotspot: http://:5050
 Troubleshooting
@@ -54,9 +57,10 @@ bash
 export PH_CAL_LOW_PH=7.00
 export PH_CAL_LOW_V=1.70
 export PH_CAL_HIGH_PH=4.00
-export PH_CAL_HIGH_V=2.10
+export PH_CAL_HIGH_V=2.00
 export PH_ADC_CHANNEL=0
 export PH_VREF=3.3
+
 python3 app.py
 Remove PH_OVERRIDE to use the calibrated pH.
 Optional (tell me if you want this)
