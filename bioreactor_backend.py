@@ -14,6 +14,11 @@ import threading
 import random
 from collections import deque
 import os
+try:
+    import spidev
+    SPI_AVAILABLE = True
+except Exception:
+    SPI_AVAILABLE = False
 
 # For Raspberry Pi GPIO (will be mocked if not available)
 try:
@@ -121,12 +126,45 @@ class PHSensor:
         except Exception:
             self.override_value = 7.2
         logger.info("pH sensor initialized")
+        
+        # ADC (MCP3008) setup if available and SPI enabled on the Pi
+        self.use_adc = False
+        self.adc_channel = int(os.environ.get('PH_ADC_CHANNEL', '0'))
+        self.vref = float(os.environ.get('PH_VREF', '3.3'))  # MCP3008 VREF (wired to 3.3V per your wiring)
+        # Optional two-point calibration via environment (volts)
+        # Example: PH_CAL_LOW_PH=7.00 PH_CAL_LOW_V=1.70 PH_CAL_HIGH_PH=4.00 PH_CAL_HIGH_V=2.10
+        self.cal_low_ph = os.environ.get('PH_CAL_LOW_PH')
+        self.cal_low_v = os.environ.get('PH_CAL_LOW_V')
+        self.cal_high_ph = os.environ.get('PH_CAL_HIGH_PH')
+        self.cal_high_v = os.environ.get('PH_CAL_HIGH_V')
+        self._calc_linear_params()
+
+        if SPI_AVAILABLE:
+            try:
+                self.spi = spidev.SpiDev()
+                bus = int(os.environ.get('SPI_BUS', '0'))
+                dev = int(os.environ.get('SPI_DEVICE', '0'))  # CE0
+                self.spi.open(bus, dev)
+                self.spi.max_speed_hz = int(os.environ.get('SPI_MAX_SPEED', '1350000'))
+                self.spi.mode = 0
+                self.use_adc = True
+                logger.info(f"pH ADC (MCP3008) initialized on SPI bus {bus}, device {dev}, channel {self.adc_channel}")
+            except Exception as e:
+                logger.warning(f"SPI/MCP3008 init failed, falling back to simulated pH: {e}")
     
     def read_ph(self) -> Optional[float]:
         """Read pH value"""
         try:
             if self.override_enabled:
                 return max(0, min(14, self.override_value + self.calibration_offset))
+            if self.use_adc:
+                voltage = self._read_adc_voltage(self.adc_channel)
+                if voltage is None:
+                    return None
+                ph = self._voltage_to_ph(voltage)
+                if ph is None:
+                    return None
+                return max(0, min(14, ph))
             # For development, return simulated pH values
             # In real implementation, this would read from ADC connected to pH probe
             base_ph = 7.2
@@ -149,6 +187,45 @@ class PHSensor:
                 self.override_value = float(value)
             except Exception:
                 pass
+
+    # ===== MCP3008 helpers and calibration =====
+    def _read_adc_voltage(self, channel: int) -> Optional[float]:
+        try:
+            if not (0 <= channel <= 7):
+                return None
+            # MCP3008 single-ended read command: start bit, single/diff bit, channel bits
+            # Send 3 bytes: 1 (start), (8+ch)<<4, 0; receive 3 bytes
+            resp = self.spi.xfer2([1, (8 + channel) << 4, 0])
+            value = ((resp[1] & 3) << 8) | resp[2]  # 10-bit result 0..1023
+            voltage = (value / 1023.0) * self.vref
+            return voltage
+        except Exception as e:
+            logger.error(f"ADC read error: {e}")
+            return None
+
+    def _calc_linear_params(self):
+        self._lin_a = None
+        self._lin_b = None
+        try:
+            if self.cal_low_ph and self.cal_low_v and self.cal_high_ph and self.cal_high_v:
+                low_ph = float(self.cal_low_ph)
+                low_v = float(self.cal_low_v)
+                high_ph = float(self.cal_high_ph)
+                high_v = float(self.cal_high_v)
+                if abs(high_v - low_v) > 1e-6:
+                    # Linear mapping: ph = a*V + b
+                    self._lin_a = (high_ph - low_ph) / (high_v - low_v)
+                    self._lin_b = low_ph - self._lin_a * low_v
+                    logger.info(f"pH linear calibration set: a={self._lin_a:.4f}, b={self._lin_b:.4f}")
+        except Exception as e:
+            logger.warning(f"Invalid pH calibration env vars: {e}")
+
+    def _voltage_to_ph(self, voltage: float) -> Optional[float]:
+        # If linear params available, use them; else return None to indicate not calibrated
+        if self._lin_a is not None and self._lin_b is not None:
+            return self._lin_a * voltage + self._lin_b + self.calibration_offset
+        # Not calibrated: return None so UI shows -- (set PH_OVERRIDE to force a display value)
+        return None
 
 
 class FanController:

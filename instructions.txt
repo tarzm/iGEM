@@ -1,0 +1,64 @@
+How to run (day-to-day)
+Activate venv and run with your saved env settings:
+source .venv/bin/activate
+export PH_ADC_CHANNEL=0 PH_VREF=3.3
+export PH_CAL_LOW_PH=7.00 PH_CAL_LOW_V=1.70 PH_CAL_HIGH_PH=4.00 PH_CAL_HIGH_V=2.10
+export FAN_PIN=12 FAN_THRESHOLD=24
+python3 app.py
+Open on the Pi: http://localhost:5050
+Open from another device on same network/hotspot: http://:5050
+Troubleshooting
+pH shows “--”: calibration env vars not set or invalid. Set PH_CAL_* as above or temporarily use PH_OVERRIDE.
+GPIO busy: ensure 
+fan.py
+ or other scripts aren’t running at the same time; reloader is disabled, but a dangling process can hold the pin. Reboot if needed.
+SPI read errors: confirm SPI is enabled, wiring is correct, and spidev is installed. ls /dev/spidev0.0 should exist.
+Optional improvements I can add
+Add a small “Settings” panel in the UI to view and update calibration/override live (persisted to a JSON file).
+Show raw voltage under the pH card for debugging.
+Implement a three‑point calibration if you want finer accuracy.
+If you want me to wire calibration into the UI and store settings on disk so you don’t need env vars, say the word and I’ll add it.
+
+Feedback submitted
+
+
+i dont want to do calibration at the moment. I want to be able to do this later.
+
+You don’t need to calibrate now. Use a fixed pH for display and add calibration later when you’re ready.
+
+Recommended setup now (no calibration)
+Set a temporary pH value with an environment variable and run the app:
+Show pH 7.2, for example:
+
+bash
+source .venv/bin/activate
+export PH_OVERRIDE=7.2
+# optional fan settings if needed
+export FAN_PIN=12
+export FAN_THRESHOLD=24
+python3 app.py
+
+The UI will show your chosen pH while temperature is live from DS18B20.
+You can change PH_OVERRIDE anytime (e.g., 7.0, 7.4) without touching the code.
+Later, when you want real pH
+You already wired MCP3008 on SPI and the code reads it. To convert voltage → pH:
+Measure voltage in two buffers (e.g., pH 7.00 and 4.00).
+Set these env vars before starting:
+
+PH_CAL_LOW_PH, PH_CAL_LOW_V
+PH_CAL_HIGH_PH, PH_CAL_HIGH_V
+
+Example:
+
+bash
+export PH_CAL_LOW_PH=7.00
+export PH_CAL_LOW_V=1.70
+export PH_CAL_HIGH_PH=4.00
+export PH_CAL_HIGH_V=2.10
+export PH_ADC_CHANNEL=0
+export PH_VREF=3.3
+python3 app.py
+Remove PH_OVERRIDE to use the calibrated pH.
+Optional (tell me if you want this)
+I can make the UI show the raw ADC voltage under the pH card while pH is overridden or uncalibrated.
+This helps you see the live signal now and calibrate later from the same screen.
